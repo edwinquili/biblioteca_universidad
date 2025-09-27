@@ -71,6 +71,7 @@
         </tr>
         <?php endforeach; ?>
     </table>
+    <a href="index.php?action=exportar_excel" class="btn" target="_blank">Exportar a Excel</a>
 </div>
 </body>
 </html>

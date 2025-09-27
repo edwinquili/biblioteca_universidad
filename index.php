@@ -75,6 +75,10 @@ switch ($action) {
     case 'exportar_estudiantes_word':
         (new EstudiantesController())->exportarWord(); 
         break;
+    
+    case 'exportar_excel':
+        (new LibrosController())->exportarExcel();
+        break;
     // Acción no reconocida
     default:
         echo "<h2>Acción no reconocida</h2>";

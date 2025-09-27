@@ -76,6 +76,25 @@ class Libro
               JOIN categorias c ON l.id_categoria = c.id_categoria";
         return $this->conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function listarPaginado($limit, $offset)
+    {
+        $limit = intval($limit);
+        $offset = intval($offset);
+
+        $query = "SELECT l.id_libro, l.titulo, a.nombre AS autor, c.nombre_categoria AS categoria, l.anio_publicacion
+              FROM libros l
+              JOIN autores a ON l.id_autor = a.id_autor
+              JOIN categorias c ON l.id_categoria = c.id_categoria
+              LIMIT $limit OFFSET $offset";
+
+        return $this->conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function contarTotal()
+    {
+        $query = "SELECT COUNT(*) AS total FROM libros";
+        return $this->conn->query($query)->fetch(PDO::FETCH_ASSOC)['total'];
+    }
 }
 ?><?php
-

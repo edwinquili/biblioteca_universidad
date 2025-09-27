@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['usuario'])) {
+    header("Location: auth/login.php");
+    exit;
+}
+
 require_once 'controllers/LibrosController.php';
 require_once 'controllers/EstudiantesController.php';
 require_once 'controllers/PrestamosController.php';
@@ -13,7 +19,7 @@ switch ($action) {
         (new LibrosController())->ajaxLibros();
         exit;
 
-    // Acciones que no imprimen HTML directamente
+        // Acciones que no imprimen HTML directamente
     case 'crear':
         (new LibrosController())->crear();
         exit;
@@ -23,7 +29,7 @@ switch ($action) {
     case 'eliminar':
         (new LibrosController())->eliminar($id);
         exit;
-    case 'exportar_excel':
+    case 'exportar_excel_libros':
         (new LibrosController())->exportarExcel();
         exit;
     case 'exportar_prestamos_pdf':
@@ -38,6 +44,7 @@ switch ($action) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Gestión Biblioteca Universitaria</title>
@@ -45,13 +52,23 @@ switch ($action) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-light">
 
+<body class="bg-light">
+    <style>
+    main {
+        min-height: 500px; /* Asegura que el main tenga una altura mínima */
+    }
+</style>
     <!-- Encabezado principal -->
     <header class="bg-primary text-white py-4 mb-3">
         <div class="container text-center">
             <h1 class="display-5">📚 Gestión Biblioteca Universitaria</h1>
             <p class="lead">Administra libros, estudiantes y préstamos de forma eficiente y profesional.</p>
+        </div>
+
+        <div class="container text-center mt-3">
+            <span class="me-3">👋 Bienvenido, <?= $_SESSION['usuario'] ?></span>
+            <a href="logout.php" class="btn btn-sm btn-outline-danger">Cerrar sesión</a>
         </div>
     </header>
 
@@ -109,7 +126,8 @@ switch ($action) {
     </footer>
 
 </body>
+
 </html>
-?>
 </body>
+
 </html>

@@ -16,7 +16,6 @@ class LibrosController
 
     public function index()
     {
-        $libros = $this->modelo->listar();
         include 'views/libros/listar.php';
     }
 
@@ -84,5 +83,97 @@ class LibrosController
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
         exit;
+    }
+
+    public function ajaxLibros()
+    {
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        $libros = $this->modelo->listarPaginado($limit, $offset);
+        $total = $this->modelo->contarTotal();
+        $totalPages = ceil($total / $limit);
+
+        // Generar HTML de filas
+        $html = '';
+        foreach ($libros as $libro) {
+            $id = htmlspecialchars($libro['id_libro']);
+            $titulo = htmlspecialchars($libro['titulo']);
+            $autor = htmlspecialchars($libro['autor']);
+            $categoria = htmlspecialchars($libro['categoria']);
+            $anio = htmlspecialchars($libro['anio_publicacion']);
+
+            $html .= "<tr>
+            <td>$id</td>
+            <td>$titulo</td>
+            <td>$autor</td>
+            <td>$categoria</td>
+            <td>$anio</td>
+            <td>
+                <a href='index.php?action=editar&id=$id'>Editar</a> |
+                <a href='index.php?action=eliminar&id=$id' onclick='return confirm(\"¿Eliminar este libro?\")'>Eliminar</a>
+            </td>
+        </tr>";
+        }
+
+        // Generar botones de paginación
+        $pagination = $this->generarBotones($totalPages, $page);
+
+        // Devolver como JSON
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'html' => $html,
+            'pagination' => $pagination
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
+    private function generarBotones($totalPages, $currentPage)
+
+    
+    {
+        
+        $html = '<nav aria-label="Paginación de libros">';
+        $html .= '<ul class="pagination justify-content-center" style="margin-top: 20px;">';
+
+        // Flecha izquierda
+        if ($currentPage > 1) {
+            $prev = $currentPage - 1;
+            $html .= "<li class='page-item'>
+                    <a class='page-link' href='#' data-page='$prev' aria-label='Anterior'>
+                        <span aria-hidden='true'>&laquo;</span>
+                    </a>
+                  </li>";
+        } else {
+            $html .= "<li class='page-item disabled'>
+                    <span class='page-link' aria-hidden='true'>&laquo;</span>
+                  </li>";
+        }
+
+        // Números de página
+        for ($i = 1; $i <= $totalPages; $i++) {
+            $active = ($i === $currentPage) ? 'active' : '';
+            $html .= "<li class='page-item $active'>
+                    <a class='page-link' href='#' data-page='$i'>$i</a>
+                  </li>";
+        }
+
+        // Flecha derecha
+        if ($currentPage < $totalPages) {
+            $next = $currentPage + 1;
+            $html .= "<li class='page-item'>
+                    <a class='page-link' href='#' data-page='$next' aria-label='Siguiente'>
+                        <span aria-hidden='true'>&raquo;</span>
+                    </a>
+                  </li>";
+        } else {
+            $html .= "<li class='page-item disabled'>
+                    <span class='page-link' aria-hidden='true'>&raquo;</span>
+                  </li>";
+        }
+
+        $html .= '</ul></nav>';
+        return $html;
     }
 }

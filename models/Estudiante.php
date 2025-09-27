@@ -22,6 +22,8 @@ class Estudiante {
         $stmt = $this->conn->prepare("DELETE FROM $this->tabla WHERE id_estudiante = ?");
         return $stmt->execute([$id]);
     }
+
+    
 }
 ?><?php
 require_once 'config/database.php'; 

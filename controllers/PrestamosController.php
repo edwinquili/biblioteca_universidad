@@ -60,5 +60,4 @@ class PrestamosController
     $pdf->Output();
     exit;
 }
-
 }

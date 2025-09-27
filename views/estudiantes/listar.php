@@ -68,6 +68,7 @@
         </tr>
         <?php endforeach; ?>
     </table>
+    <a href="index.php?action=exportar_estudiantes_word" class="btn" target="_blank">Exportar a Word</a>
 </div>
 </body>
 </html>

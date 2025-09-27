@@ -66,6 +66,7 @@
         </tr>
         <?php endforeach; ?>
     </table>
+    <a href="index.php?action=exportar_prestamos_pdf" class="btn" target="_blank">Exportar a PDF</a>
 </div>
 </body>
 </html>

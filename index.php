@@ -67,14 +67,23 @@ switch ($action) {
     case 'crear_prestamo':
         (new PrestamosController())->crear();
         break;
+    
+    case 'exportar_prestamos_pdf':
+        (new PrestamosController())->exportarPDF(); 
+        break;    
 
+    case 'exportar_estudiantes_word':
+        (new EstudiantesController())->exportarWord(); 
+        break;
+    
+    case 'exportar_excel':
+        (new LibrosController())->exportarExcel();
+        break;
     // Acción no reconocida
     default:
         echo "<h2>Acción no reconocida</h2>";
         break;
-}
+    }
 ?>
-
-
 </body>
 </html>

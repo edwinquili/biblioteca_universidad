@@ -33,6 +33,15 @@ class Prestamo {
     $query = "SELECT id_estudiante, nombre FROM estudiantes";
     return $this->conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function listarConDetalles() {
+    $query = "SELECT p.id_prestamo, l.titulo, e.nombre AS estudiante, p.fecha_prestamo, p.fecha_devolucion
+              FROM prestamos p
+              JOIN libros l ON p.id_libro = l.id_libro
+              JOIN estudiantes e ON p.id_estudiante = e.id_estudiante";
+    return $this->conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }
 ?><?php
 require_once 'config/database.php'; 
